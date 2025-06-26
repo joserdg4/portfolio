@@ -41,7 +41,7 @@ Soy graduado en ciencias de la salud y me estoy especializando en análisis de d
 ## 📫 Contacto
 
 - Email profesional: **joseromerodeg@gmail.com**
-- LinkedIn: [linkedin.com/in/joseanalyst](https://linkedin.com/in/joseromerodegaetano)
+- LinkedIn: [linkedin.com/in/joseromerodegaetano](https://linkedin.com/in/joseromerodegaetano)
 
 ---
 
