@@ -40,8 +40,8 @@ Soy graduado en ciencias de la salud y me estoy especializando en análisis de d
 
 ## 📫 Contacto
 
-- Email profesional: **josedata.analyst@ejemplo.com**
-- LinkedIn: [linkedin.com/in/joseanalyst](https://linkedin.com/in/joseanalyst) *(reemplaza con tu link real)*
+- Email profesional: **joseromerodeg@gmail.com**
+- LinkedIn: [linkedin.com/in/joseanalyst](https://linkedin.com/in/joseromerodegaetano)
 
 ---
 
