@@ -1,4 +1,4 @@
-# 👨‍💻 Portfolio de Ciencia de Datos de Jose Romero de Gaetano
+# 👨🏻‍💻 Portfolio de Ciencia de Datos de Jose Romero de Gaetano
 
 ¡Bienvenido a mi portfolio! Soy José, un apasionado de los datos con interés en convertir información en conocimiento accionable. Este repositorio muestra una colección de proyectos que he desarrollado utilizando Python, R, SQL y otras tecnologías del ámbito de la ciencia de datos y el análisis.
 
@@ -32,7 +32,7 @@ Consultas y análisis realizados con bases de datos relacionales y no relacional
 
 ---
 
-## 🙋 Sobre mí
+## 🙋🏻‍♂️ Sobre mí
 
 Soy graduado en ciencias de la salud y me estoy especializando en análisis de datos y bioinformática. Me interesa aplicar técnicas de análisis y machine learning a problemas reales en salud, ciencia y negocio.
 
