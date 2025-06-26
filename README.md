@@ -1,47 +1,48 @@
-# Portfolio de Jose Romero - Data Analyst & Bioinformático
+# 👨‍💻 Portfolio de Ciencia de Datos de Jose Romero de Gaetano
 
-Bienvenido a mi portfolio donde comparto proyectos realizados en Python, R, SQL, NoSQL y más.
+¡Bienvenido a mi portfolio! Soy José, un apasionado de los datos con interés en convertir información en conocimiento accionable. Este repositorio muestra una colección de proyectos que he desarrollado utilizando Python, R, SQL y otras tecnologías del ámbito de la ciencia de datos y el análisis.
 
----
-
-## Proyectos destacados
-
-### Python (Jupyter Notebooks)
-- [Análisis de ventas](python_projects/proyecto1.ipynb)  
-  Análisis detallado de datos de ventas con visualizaciones y modelos predictivos.
-
-- [Machine Learning básico](python_projects/proyecto2.ipynb)  
-  Introducción a modelos supervisados y evaluación de rendimiento.
-
-### R (HTML y RMarkdown)
-- [Reporte de análisis estadístico](r_projects/proyecto_html/index.html)  
-  Reporte generado con R Markdown y exportado a HTML.
-
-- [Análisis en RMarkdown](r_projects/proyecto_rmd/analisis.Rmd)  
-  Código y explicación para análisis estadísticos avanzados.
-
-### SQL
-- [Consultas para gestión de bases de datos](sql_projects/consulta.sql)  
-  Consultas SQL para extracción y manipulación de datos.
-
-### NoSQL
-- [Consultas MongoDB](nosql_projects/consulta_mongodb.js)  
-  Ejemplos de consultas con MongoDB.
+🌐 [English version](./README.en.md)
 
 ---
 
-## Sobre mí
+## 📂 Categorías de Proyectos
 
-Soy Jose Romero, apasionado por el análisis de datos, bioinformática y la ciencia de datos aplicada a problemas reales.  
-Mi objetivo es seguir aprendiendo y aportando valor con datos.
+### 🐍 Proyectos en Python (Jupyter Notebooks)
+Proyectos prácticos con Python enfocados en análisis de datos, visualización y machine learning.
+
+- [`python_projects/`](./python_projects/)
+  - `proyecto1.ipynb`: Análisis exploratorio de COVID-19  
+  - `proyecto2.ipynb`: Segmentación de clientes con K-means
+
+### 📊 Proyectos en R (Reportes HTML)
+Reportes interactivos y reproducibles creados con R Markdown y renderizados como páginas web.
+
+- [`r_projects/`](./r_projects/)
+  - `proyecto1.html`: Análisis de series temporales en R  
+  - `proyecto2.html`: Visualización avanzada con ggplot2
+
+### 🛢️ Proyectos con SQL / NoSQL
+Consultas y análisis realizados con bases de datos relacionales y no relacionales.
+
+- [`sql_projects/`](./sql_projects/)
+  - `consultas_postgresql.sql`: Indicadores clave desde una base de datos de ventas  
+- [`nosql_projects/`](./nosql_projects/)
+  - `mongo_queries.md`: Consultas MongoDB y análisis básico
 
 ---
 
-## Contacto
+## 🙋 Sobre mí
 
-📧 [Correo profesional](mailto:joseromerodeg@gmail.com)  
-🔗 [LinkedIn](https://www.linkedin.com/in/joseromerodegaetano)
+Soy graduado en ciencias de la salud y me estoy especializando en análisis de datos y bioinformática. Me interesa aplicar técnicas de análisis y machine learning a problemas reales en salud, ciencia y negocio.
 
 ---
 
-¡Gracias por visitar mi portfolio!
+## 📫 Contacto
+
+- Email profesional: **josedata.analyst@ejemplo.com**
+- LinkedIn: [linkedin.com/in/joseanalyst](https://linkedin.com/in/joseanalyst) *(reemplaza con tu link real)*
+
+---
+
+> “Convertir datos en decisiones. Siempre aprendiendo.”  
