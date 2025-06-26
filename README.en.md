@@ -1,4 +1,4 @@
-# 👨‍💻 Jose's Data Science Portfolio
+# 👨🏻‍💻 Jose's Data Science Portfolio
 
 Welcome to my portfolio! I'm Jose, a data enthusiast passionate about turning data into insights. This repository showcases a collection of projects I've developed using Python, R, SQL, and other technologies across the data science and analytics spectrum.
 
