@@ -1,0 +1,757 @@
+---
+title: "PEC3"
+author: "Jose Romero de Gaetano"
+date: "2025-05-04"
+output:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    number_sections: false
+    fig_caption: true
+    code_folding: none
+    df_print: paged
+fontsize: 12pt
+lang: es
+params:
+  autor: "Jose Romero De Gaetano"
+runtime: shiny
+---
+
+# Sección 1: Regresión Lineal
+
+## Ejercicio 1
+
+<span style="color:blue;">**A partir del conjunto de datos Pima.tr (del paquete MASS) sobre mujeres indígenas Pima y su riesgo de diabetes, se destacan las siguientes variables:**</span>
+
+<span style="color:blue;">**Variables relevantes:**</span>
+
+<span style="color:blue;">- glu: concentración de glucosa en sangre</span>
+
+<span style="color:blue;">- age: edad de la persona</span>
+
+<span style="color:blue;">- bmi: índice de masa corporal (BMI)</span>
+
+<span style="color:blue;">- diabetes: diagnóstico de diabetes (Sí/No)</span>
+
+<span style="color:blue;">Información del Dataset: https://rdrr.io/cran/MASS/man/Pima.tr.html</span>
+
+<span style="color:blue;">**a) Carga y explora el conjunto de datos.**</span>
+
+<span style="color:blue;">**b) Realiza un gráfico de dispersión entre el índice de masa corporal bmi) y la concentración de glucosa (glu).**</span>
+
+<span style="color:blue;">**c) Ajusta un modelo de regresión lineal con glu como variable dependiente y bmi como
+variable independiente.**</span>
+
+<span style="color:blue;">**d) Interpreta el coeficiente de regresión y el valor de R² del modelo.**</span>
+
+<span style="color:blue;">**e) Analiza los residuos del modelo para validar los supuestos de regresión.**</span>
+
+### Apartado a)
+
+```{r}
+# a) Cargamos y exploramos el conjunto de datos 'Pima.tr'
+# Cargamos libreria 'MASS'
+library(MASS)
+data("Pima.tr")
+
+# Visualizamos las primeras filas
+head(Pima.tr)
+
+# Estructura de los datos
+str(Pima.tr)
+
+# Nombre de las variables 
+names(Pima.tr)
+```
+
+El conjunto de datos 'Pima.tr' de la libreria 'MASS' forma parte de un estudio que fue realizado por el *National Institute of Diabetes and Digestive and Kidney Diseases*, contiene observaciones de mujeres de la etnia *Pima* (índigena americano), con el objetivo de predecir la presencia de diabetes a partir de distintas variables médicas y personales. Encotramos las siguientes variables:
+
+- **npreg** (*variable numérica tipo int*): estudia el número de embarazos previos.
+
+- **glu** (*variable numérica tipo int*): concentración de glucosa en sangre en mg/dL.
+
+- **bp** (*variable numérica tipo int*): estudia la presión sanguínea en mmHg.
+
+- **skin** (*variable numérica tipo int*): relacionado con la grasa corporal, estudia el grosor del pliegue cutáneo tricipital en mm.
+
+- **bmi** (*variable numérica tipo float*): Índice de Masa Corporal (IMC) en kg/m^2.
+
+- **ped** (*variable numérica tipo float*): estudia la probabilidad de tener diabetes (en base al pedigrí según antecedentes familiares).
+
+- **age** (*variable numérica tipo int*): edad en años.
+
+- **type** (*factor*): es la variable objetivo, "No diabetes" (1) o "Sí diabetes" (2).
+
+```{r}
+# Revisamos si hay algún valor NA
+sum(is.na(Pima.tr)) # no hay valores NA
+
+# Resumen estadístico
+summary(Pima.tr)
+```
+
+### Apartado b)
+
+```{r}
+# b) Realiza un gráfico de dispersión entre el índice de masa corporal bmi)
+# y la concentración de glucosa (glu).
+plot(Pima.tr$bmi, Pima.tr$glu,
+     xlab = "Índice de Masa Corporal (IMC)",
+     ylab = "Concentración de glucosa (mg/dL)",
+     main = "IMC frente a concentración de glucosa",
+       pch = 19, col = "darkred")
+```
+
+En el gráfico observamos el IMC frente a la concentración de glucosa, para estudiar si hay algún tipo de correlación entre el IMC y [glucosa] podemos proceder con un análisis estadístico.
+
+### Apartado c)
+
+```{r}
+# c) Ajusta un modelo de regresión lineal con glu como variable dependiente y bmi como
+# variable independiente.
+
+# Podemos estudiar la relación entre las variables IMC y [glu] 
+# calculando el coeficiente de correlación
+cor(Pima.tr[,c("glu", "bmi")], use = "complete")
+```
+A partir del coeficiente de correlación se observa una ligera tendencia positiva, lo que significa que a medida que el IMC aumenta podría suponer un aumento de la concentración de glucosa, no obstante, el valor es cercano a 0 (no muy elevado) lo que significa que solo el valor IMC no sería suficiente para explicar el aumento de la concentración de glucosa, pues podrían verse implicada las otras variables también en su determinación.
+
+Para proseguir con el estudio de ambas variables procedemos con el modelo de regresión lineal.
+
+```{r}
+# Modelo de regresión lineal
+regmodel <- lm(glu~bmi, data = Pima.tr)
+summary(regmodel)
+
+# Coeficiente de regresión
+lm(formula = glu ~ bmi, data = Pima.tr)
+
+# Grafico con la linea de regresion
+plot(Pima.tr$bmi, Pima.tr$glu, xlab = "IMC", ylab = "[glucosa] (mg/dL)",
+      pch = 19, col = "darkred")
+abline(regmodel)
+```
+
+### Apartado d)
+
+**d) Interpreta el coeficiente de regresión y el valor de R² del modelo.**
+
+- Ecuación de la recta: glu = 87.79 + 1.12 * bmi
+
+- t valor (bmi): 3.125
+
+- p valor (bmi): 0.00205 
+
+- R^2: 0.047
+
+El valor de R^2 que informa sobre el grado de ajuste del modelo es: 0.047 y el p valor es 0.00205, el valor de R^2 es bajo, 
+
+Observando el valor de R^2 y el p valor, deducimos que a pesar de que el valor de R^2 es bajo, el p valor es > 0.05 por lo que podemos concluir que hay una relación estadística significativa entre ambas variables, los valores del IMC no hay explican toda la variabilidad en los valores de la concentración de glucosa (hay otras variables que también intervienen), pero si están relacionados.
+
+De los valores del coeficiente de regresión deducimos que a medida que los valores del IMC aumenta también lo hacen los valores de [glucosa] con una pendiente no muy elevada.
+
+### Apartado e)
+
+**e) Analiza los residuos del modelo para validar los supuestos de regresión.**
+
+Encontramos los siguientes valores para los residuos:
+
+- Mínimo: -67.519
+
+- 1er Cuartil: -20.292
+
+- Mediana: -5.239
+
+- 3er Cuartil_ 19.483
+
+- Máximo: 79.104
+
+Los residuos representan la diferencia entre y los valores que predicen el modelo lineal a partir del IMC. Aunque la mayoría de valores se encuentran correctamente distribuidos, observamos que algunos valores como el mínimo (-67.519) y el máximo (+79.104) son muy extremos, lo que puede significar que el modelo no predice correctamente para todos los casos, esto como hemos visto anteriormente también viene refleado por el bajo valor de R^2 (0.047). Hay relación entre ambas variables pero dicha relación es ligera.
+
+## Ejercicio 2
+
+<span style="color:blue;">**Busca un paquete de R o genera unos datos inventados que tengan un coeficiente de Regresión alto y aplica los pasos que se explican en la solución del Caso práctico 2 del LAB 6.**</span>
+
+Recordamos el caso práctico 2 del LAB5: 
+
+[...]*Se pide realizar un estudio de regresión lineal, regresión múltiple, test ANOVA y test clustering sobre dicho conjunto de datos. Las variables elegidas en cada uno de los casos posibles que tratar se dan a elegir al estudiante.*
+
+Realizamos el ejercicio a partir del conjunto de datos 'mtcars' contiene información sobre el consumo de combustible. y distintas características en distintos automóviles.
+
+```{r}
+# Cargamos los datos
+data("mtcars")
+
+# Visualizamos las primeras filas de mtcars
+head(mtcars)
+
+# Descripcion de las variables
+str(mtcars)
+
+# Revisamos si hay valores NA
+sum(is.na(mtcars))
+```
+
+Encontramos las siguientes variables:
+
+- mpg: eficiencia del combustible (medida en millas/galón).
+
+- cyl: número de cilindros del motor.
+
+- disp: cilindros del motor en pulgadas cúbicas.
+
+- hp: potencia bruta del motor.
+
+- drat: relación del eje trasero.
+
+- wt: peso del vehículo en milipounds (miles de libras).
+
+- qsec: tiempo en seg. para recorrer un cuarto de milla
+
+- vs: tipo de motor, 0: en V y 1: en línea.
+
+- am: tipo de transmisión, 0: automático y 1: manual.
+
+- gear: número de marchas hacia delante.
+
+- carb: número de carburadores.
+
+```{r}
+# Resumen estadístico
+summary(mtcars)
+
+# Para estudiar la relación entre variables,
+# calculamos la matriz de correlaciones
+cor(x = mtcars, method = "pearson")
+```
+
+Observamos alta correlacion entre:
+
+- 'mpg' (rendimiento) y 'wt' (peso del coche): -0.867
+
+- 'mpg' con 'cyl' (número de cilindros): -0.85 y 'mpg' con 'disp' (desplazamiento del motor): -0.84
+
+- 'mpg' con 'drat' (relación del eje trasero): 0.68
+
+- 'cyl', 'disp' y wt' presentán también correlacion > 0.88
+
+```{r}
+# Representamos la relación entre variables
+pairs(mtcars)
+
+# Realizamos el modelo de regresion lineal,
+# entre el peso del coche 'mpg' y el consumo 'wt'
+mod_reg_car <- lm(formula = mpg ~ wt, data = mtcars)
+# mostramos el resultado
+summary(mod_reg_car)
+
+# Representamos el gráfico
+plot(mtcars$mpg ~ mtcars$wt, 
+    xlab = "Peso del coche (MP)",
+    ylab = "Eficiencia combustible (millas/galon)")
+abline(mod_reg_car)
+```
+
+
+Regresión lineal simple: y = 37.2851 − 5.3445 * x
+
+- R^2 = 0.7528 (buen ajuste del modelo)
+
+- p valor: 1.29e-10 (< 0.05)
+
+- F statistic: 91.38 (modelo estadísticamente significativo)
+
+Dado el valor de R^2 (cercano a 1) y el p valor (< 0.05), deducimos que el peso tiene una influencia en la eficiencia o rendimiento del coche.
+
+Se observa una relación negativa por lo que a mayor peso del coche ('wt') menor eficiencia del combustible ('mpg').
+
+```{r}
+# Modelo de regresión múltiple
+coches_rm <- lm(mtcars$mpg~mtcars$cyl+mtcars$disp+mtcars$hp+mtcars$drat+mtcars$wt+mtcars$qsec+
+                  mtcars$vs+mtcars$am+mtcars$gear+mtcars$carb, data = mtcars)
+
+# Resultados
+summary(coches_rm)
+
+# Evaluamos cuales son los mejores predictores
+step(object = coches_rm, direction = "both", trace = 1)
+```
+
+Observamos que los mejores predictores son 'wt', 'qsec' y 'am'.
+
+Calculamos de nuevo el modelo de regresión con estos predictores
+
+```{r}
+# Modelo de regresión múltiple con los mejores predictoes
+coches_rm_p <- lm(mtcars$mpg~mtcars$wt+mtcars$qsec+mtcars$am, data = mtcars)
+summary(coches_rm_p)
+```
+Observamos los siguientes valores:
+
+- R^2: 0.8497
+
+- F statistic: 52.75
+
+- p valor: 1.21e-11
+
+El valor de R^2 sugiere que el modelo tiene un buen ajuste entre las variables que influyen en 'mpg' (eficiencia del coche).  Además, el F statistic tiene un valor de 52.7 5con un p-valor muy bajo (< 0.001), lo que indica que el modelo  es estadísticamente significativo.
+
+```{r}
+# AOV entre 'mpg' y 'wt'
+modelo_aov <- aov(mpg~factor(cyl), data = mtcars)
+summary(modelo_aov)
+```
+Observamos que el F valor de 39.7 es elevado y el p valor 4.98e-09 es < 0.05, por lo que el número de cilindros ('cyl') influye en la eficiencia del coche ('mpg').
+
+Procedemos ahora con un agrupamiento jerárquico agloemrativo en el que cada observación es un clúster que se va organizando hasta converger en una única rama central.
+
+```{r}
+# Agrupamiento jerárquico aglomerativo
+library(cluster) # cargamos libreria
+
+# Especificamos los valores de distancia
+d_agl_coches <- dist(mtcars, method = "euclidean")
+# Calculamos el cluster
+hc_agl_coches <- hclust(d_agl_coches, method = "complete")
+# Representamos el dendrograma
+plot(hc_agl_coches, cex = 0.6, hang = -1, main = "Dendrograma de cluster para mtcars")
+
+# Agrupamiento jerárquico usando la función de agnes
+# Cálculamos los clústeres
+hc_agl_coches_a <- agnes(mtcars, method = "complete")
+# Representación del dendrograma
+pltree(hc_agl_coches_a, cex = 0.6, hang = -1, main = "Dendrograma de agnes")
+# Calculamos el coeficiente de aglomeración
+hc_agl_coches_a$ac
+```
+
+El coeficiente de aglomeración es 0.93 por lo que la agrupación es fuerte.
+
+```{r}
+# Agrupamiento jerárquico divisivo con la función diana
+hc_div_coches <- diana(mtcars) # calculamos los clústeres
+pltree(hc_div_coches, cex = 0.6, hang = -1, main = "Dendrograma de diana") # lo representamos
+hc_div_coches$dc # coeficiente de división
+```
+
+El coeficiente de divisón es 0.93 también (muy próximo a 1).
+
+```{r}
+# Asociamos los agrupamientos a los datos
+pltree(hc_div_coches, cex = 0.6, hang = -1) # representación
+rect.hclust(hc_div_coches, k = 10, border = 2:10) # asociaciones
+```
+
+# Sección 2: ANOVA
+
+## Ejercicio 3
+
+<span style="color:blue;">**A partir del conjunto de datos: PlantGrowth (incluido en R en la librería Plotly).**</span>
+
+<span style="color:blue;">Variables:</span>
+
+<span style="color:blue;">weight: peso de las plantas</span>
+
+<span style="color:blue;">group: tratamiento aplicado (control o dos tipos de suplemento)</span>
+
+<span style="color:blue;">**Tareas a realizar:**</span>
+
+<span style="color:blue;">**a) Haz un box plot para comparar el peso según el tratamiento.**</span>
+
+<span style="color:blue;">**b) Ajusta un modelo ANOVA para ver si existen diferencias significativas entre grupos.**</span>
+
+<span style="color:blue;">**c) Interpreta los resultados y comprueba si es necesario añadir interacciones.**</span>
+
+<span style="color:blue;">**d) Válida el modelo con el análisis de los residuos.**</span>
+
+### Apartado a)
+
+El conjunto de datos 'PlantGrowth' estudia el crecimiento de las plantas en respuesta a distintos tratamientos.
+
+```{r}
+# a) Haz un box plot para comparar el peso según el tratamiento.
+
+# Cargamos la liberia y los datos
+library(plotly)
+data("PlantGrowth")
+
+# Primeras líneas
+head(PlantGrowth)
+
+# Estructura de datos
+str(PlantGrowth)
+
+# Revisamos si hay valores NA
+sum(is.na(PlantGrowth))
+
+# Resumen estadístico
+summary(PlantGrowth)
+```
+
+Contamos con dos variables:
+
+- weight: peso seco de la planta
+
+- group: grupo de tratamiento, puede ser control 'ctrl', tratamiento 1 'trt1' y tratamiento 2 'trt2'.
+
+```{r}
+# Creamos un boxplot para comparar el peso según el tratamiento
+boxplot(weight ~ group,
+        data = PlantGrowth,
+        col = c("yellow", "lightblue", "lightgreen"),
+        xlab = "Grupo de tratamiento",
+        ylab = "Peso seco",
+        main = "Peso de las plantas según el tratamiento")
+```
+
+De boxplot observamos que respecto del grupo control, las plantas del tratamiento 1 presentan menor peso y las plantas del grupo 2 mayor peso, por lo que podría haber una relación negativa entre el tratamiento 1 y el peso y una relación positiva entre el tratamiento 2 y el peso.
+
+### Apartado b)
+
+```{r}
+# modelo ANOVA
+aov_plantas <- aov(weight ~ group, data = PlantGrowth)
+summary(aov_plantas)
+```
+### Apartado c)
+
+Tras realizar el anova observamos que el p valor 0.0159 es < 0.05, lo que implica que si hay diferencia significativa y los tratamientos afectan al crecimiento de las plantas.
+
+En el estudio no disponemos de mas variables que puedan influir en el peso de las plantes, además del tratamiento.
+
+Sería interesante ampliar el estudio para considerar el posbile impacto de otras variables como condiciones a las que se someten las plantas, como: horas de luz, riego, nutrientes, etc... Para estudiar si hay mas variables que ejercen una influencia estadísticamente significativa en el peso de las plantas.
+
+### Apartado d)
+
+```{r}
+# Extraemos los residuos 
+residuos <- residuals(aov_plantas)
+
+# Histograma de los residuos
+hist(residuos, main = "Histograma de los residuos", xlab = "Residuos")
+
+# QQ-plot
+qqnorm(residuos)
+qqline(residuos, col = "darkred")
+
+# Gráfico de residuos vs valores ajustados
+plot(fitted(aov_plantas), residuos,
+     main = "Residuos vs Valores ajustados",
+     xlab = "Valores ajustados", ylab = "Residuos")
+abline(h = 0, col = "darkred")
+
+# Test Shapiro-Wilk
+shapiro.test(residuos)
+
+```
+
+- En el histograma observamos que los residuos siguén una distribución simétrica, del mismo modo en el QQ plot observamos que la línea se ajusta a los puntos, los residuos siguen una distribución normal.
+
+- En la gráfica de residuos vs valores ajustados observamos que se distribuyen alrededor de 0, sin formar ningún patrón, esto indica homocedasticidad.
+
+- Finalmente con el test de Saphiro-Whilk vemos que el p valor 0.4379 es > 0.05, no hay evidencia para rechazar normalidad.
+
+Del análisis de los residuos concluimos que se cumplen con los principios del ANOVA: normalidad en los residuos, homogeneidad de las varianzas (homocedasticidad) e independencia de los residuos.
+
+## Ejercicio 4
+
+<span style="color:blue;">**Durante un estudio de campo, unos investigadores midieron la humedad del suelo (en porcentaje) bajo diferentes tipos de cobertura vegetal en una zona protegida. Se consideraron cuatro tipos de cubiertas: hierba baja (H1), arbustos (H2), arbolado aclarado (H3) y bosque denso (H4).**</span>
+
+<span style="color:blue;">**Para cada tipo de cobertura, se realizaron 6 muestras en puntos diferentes. Los siguientes datos son los valores de la humedad del suelo registrados:**</span>
+
+<span style="color:blue;">- H1: 28, 33, 30, 27, 31, 29</span>
+
+<span style="color:blue;">- H2: 35, 37, 36, 38, 34, 33</span>
+
+<span style="color:blue;">- H3: 40, 39, 41, 42, 40, 43</span>
+
+<span style="color:blue;">- H4: 48, 46, 47, 45, 44, 49</span>
+
+<span style="color:blue;">**Tareas a realizar:**</span>
+
+<span style="color:blue;">**1. Reformad los datos para que haya una columna con la humedad (variable numérica) y otra con el tipo de cobertura (variable factor).**</span>
+
+<span style="color:blue;">**2. Cread un gráfico ggplot2 que muestre la humedad del suelo por grupo. Interpretarlo: ¿cree que existen diferencias entre los tipos de cobertura?**</span>
+
+<span style="color:blue;">**3. Ajustad un modelo ANOVA y comentad las conclusiones. Si existen diferencias
+significativas, indicade qué grupos parecen más diferentes.**</span>
+
+<span style="color:blue;">**4. Valide los supuestos del modelo ANOVA mediante gráficos de residuos. Comente los
+resultados.**</span>
+
+### Apartado 1)
+
+```{r}
+# Reformamos los datos
+
+# Incorporamos los datos de humedad
+humedad <- c(28, 33, 30, 27, 31, 29, # H1
+             35, 37, 36, 38, 34, 33, # H2
+             40, 39, 41, 42, 40, 43, # H3
+             48, 46, 47, 45, 44, 49) # H4
+
+# Incorporamos los datos del tipo de cobertura,
+# repitiendolos para cada valor de humedad
+cobertura <- rep(c("H1", "H2", "H3", "H4"), each = 6)
+
+# Creamos el data frame
+hum_suelo <- data.frame(humedad = humedad,
+                        cobertura = factor(cobertura))
+
+# Mostramos las primeras filas
+head(hum_suelo)
+```
+
+### Apartado 2)
+
+```{r}
+# Gráfico ggplot humedad de suelo por grupo
+
+# Cargamos la libreria
+library(ggplot2)
+
+# Realizamos el gráfico con ggplot
+ggplot(hum_suelo, aes(x = cobertura, y = humedad, fill = cobertura)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    x = "Tipo de cobertura",
+    y = "Humedad en %",
+    title = "Humedad del suelo según el tipo de cobertura"
+  ) +
+  theme_minimal()
+```
+
+En el gráfico observamos que según el tipo de cobertura vegetal difiere el procentaje de humedad, por tanto los suelos se pueden ordenar según su porcentaje de humedad de menor a mayor en este orden:
+
+- Humedad: H1 < H2 < H3 < H4
+
+Para responder a la pregunta planteada si existen diferencias entre los tipos de cobertura, parece intuirse que cada cobertura vegetal da lugar a distintos porcentajes de humedad.
+
+### Apartado 3)
+
+```{r}
+# modelo ANOVA
+aov_suelos <- aov(humedad ~ cobertura, data = hum_suelo)
+summary(aov_suelos) # resultados
+```
+- F value: 90.17
+
+- p valor_ 8.57e-12
+
+El valor de F values al ser tan alto (90.17) indica mucha variación entre los grupos, el p valor (8.57e-12) al ser < 0.05 muestra que existen diferencias significativas para la humedad en los distintos tipos de cobertura del suelo.
+
+Realizamos el test de Tukey para estudiar que grupos presentan mas diferencias.
+
+```{r}
+# Test de Tukey
+TukeyHSD(aov_suelos)
+```
+Observamos que todas las comparaciones entre los distintos tipos de cobertura son significativas pues todos los p valor entre coberturas son < 0.05, por esto deducimos que a mediada que aumenta la cobertura vegetal lo hace la humedad del suelo, a mayor cobertura mayor humedad.
+
+El suelo con la mayor cobertura H4 es el que presenta mas humedad y el suelo H1 con menor cobertura es el que presenta menor humedad.
+
+### Apartado 4
+
+```{r}
+# Extraemos los residuos
+residuos <- residuals(aov_suelos)
+
+# Histograma de los residuos
+hist(residuos, main = "Histogramas de los residuos", xlab = "residuos")
+
+## QQ plot
+qqnorm(residuos)
+qqline(residuos, col = "darkred")
+
+# Gráfico de residuos vs valores ajustados
+plot(fitted(aov_suelos), residuos,
+     main = "Residuos vs Valores ajustados",
+     xlab = "Valores ajustados", ylab = "Residuos")
+abline(h = 0, col = "darkred")
+
+# Test Shapiro-Wilk
+shapiro.test(residuos)
+```
+
+- En el histogramo observamos que los residuos siguén una distribución simétrica, del mismo modo en el QQ plot observamos que la línea se ajusta a los puntos, los residuos siguen una distribución normal.
+
+- En la gráfica de residuos vs valores ajustados observamos que se distribuyen alrededor de 0, sin formar ningún patrón, esto indica homocedasticidad.
+
+- Con el test de Saphiro-Whilk vemos que el p valor 0.4875 es > 0.05, no hay evidencia para rechazar normalidad.
+
+Del análisis de los residuos concluimos que se cumplen con los principios del ANOVA: normalidad en los residuos, homogeneidad de las varianzas (homocedasticidad) e independencia de los residuos.
+
+# Sección 3: Aplicaciones de R
+
+## Ejercicio 5
+
+<span style="color:blue;">**Diseñar una aplicación interactiva con Shiny que permita: Cargar el archivo .csv con información sobre hábitos de salud (alimentación, ejercicio, horas de sueño…) que se genera con el siguiente código.**</span>
+
+```{r}
+set.seed(123)
+n <- 200 # Número de registros
+
+df <- data.frame(
+Edad = sample(18:80, n, replace = TRUE),
+Género = sample(c("Hombre","Mujer"), n, replace = TRUE),
+Frutos_por_día = rpois(n, lambda = 2),
+Ejercicio_semanal = round(runif(n, 0, 10), 1),
+Fuma = sample(c("Sí","No"), n, replace = TRUE, prob = c(0.3, 0.7)),
+Dorm_media_horas = round(rnorm(n, mean = 7, sd = 1.2), 1))
+
+# Escribe el archivo CSV
+write.csv(df,"habitos_saludables.csv", row.names = FALSE)
+```
+
+<span style="color:blue;">**Tareas a realizar:**</span>
+
+<span style="color:blue;">**Mostrar un resumen estadístico del conjunto de datos.**</span>
+
+<span style="color:blue;">**Visualizar diferentes gráficos:**</span>
+
+<span style="color:blue;">- Un histograma de una variable cuantitativa seleccionada (p. ej.: horas de sueño).</span>
+
+<span style="color:blue;">- Un gráfico de barras para una variable categórica (p. ej.: frecuencia de actividad física).</span>
+
+<span style="color:blue;">- Un gráfico de dispersión seleccionando dos variables cuantitativas (p. ej.: horas de sueño vs IMC).</span>
+
+<span style="color:blue;">**Funcionalidades mínimas que debe tener la aplicación:**</span>
+
+<span style="color:blue;">- Uso de fileInput() para cargar el archivo.</span>
+
+<span style="color:blue;">- Selección de variables mediante selectInput().</span>
+
+<span style="color:blue;">- Visualización con plotOutput() y renderPlot().</span>
+
+<span style="color:blue;">- Mostrar el resumen con verbatimTextOutput() y renderPrint().</span>
+
+<span style="color:blue;">*Nota: puede realizar capturas de pantalla para explicar los pasos que vaya desarrollando para crear la aplicación.*</span>
+
+```{r}
+# Creamos la aplicación Shiny
+
+# Cargamos las librerias
+library(shiny)
+
+# Definimos la interfaz de la aplicación shiny
+ui <- fluidPage(
+  titlePanel("Conjunto de datos de pacientes"),
+  sidebarLayout(
+    sidebarPanel(
+      # Cargamos el archivo
+      fileInput("file", "especifica el conjunto de datos a mostrar"),
+      # Selectores de las variables x e y
+      uiOutput("var_hist"),
+      uiOutput("var_bar"),
+      uiOutput("x_var"),
+      uiOutput("y_var")
+    ),
+    
+    mainPanel(
+      h4("Resumen estadístico del conjunto de datos"), 
+      verbatimTextOutput("resumen"),
+      # Gráficos
+      h4("Histograma de variable cuantitativa"),
+      plotOutput("histograma"),
+      h4("Gráfico de barras para variable categórica"),
+      plotOutput("barras"),
+      h4("Gráfico de dispersión entre dos variables cuantitativas"),
+      plotOutput("dispersion")
+    )
+  )
+)
+
+# Definimos el servidor de la aplicación
+server <- function(input, output) {
+  # Cargamos el conjunto de datos
+  dataset <- reactive({
+    req(input$file)
+    read.csv(input$file$datapath)
+  })
+
+  # Genera selectInput para cada tipo de gráfico
+  output$var_hist <- renderUI({
+    req(dataset())
+    numeric_vars <- names(dataset())[sapply(dataset(), is.numeric)]
+    selectInput("hist_var", "Variable para histograma:", choices = numeric_vars)
+  })
+  
+  output$var_bar <- renderUI({
+    req(dataset())
+    cat_vars <- names(dataset())[sapply(dataset(), is.factor) | sapply(dataset(), is.character)]
+    selectInput("bar_var", "Variable para gráfico de barras:", choices = cat_vars)
+  })
+  
+  output$x_var <- renderUI({
+    req(dataset())
+    numeric_vars <- names(dataset())[sapply(dataset(), is.numeric)]
+    selectInput("xvar", "Variable X (cuantitativa):", choices = numeric_vars)
+  })
+
+  output$y_var <- renderUI({
+    req(dataset())
+    numeric_vars <- names(dataset())[sapply(dataset(), is.numeric)]
+    selectInput("yvar", "Variable Y (cuantitativa):", choices = numeric_vars)
+  })
+    
+ 
+  # Histograma
+  output$histograma <- renderPlot({
+    req(input$hist_var)
+    hist(dataset()[[input$hist_var]],
+         col = "skyblue", 
+         main = paste("Histograma de", input$hist_var),
+         xlab = input$hist_var)
+  })
+  
+  # Gráfico de barras
+  output$barras <- renderPlot({
+    req(input$bar_var)
+    var <- as.factor(dataset()[[input$bar_var]])
+    barplot(table(var),
+            col = "lightcoral", 
+            main = paste("Frecuencia de", input$bar_var),
+            xlab = input$bar_var,
+            ylab = "Frecuencia")
+  })
+  
+  # Gráfico de dispersión
+  output$dispersion <- renderPlot({
+    req(input$xvar, input$yvar)
+    plot(dataset()[[input$xvar]], dataset()[[input$yvar]],
+         col = "darkgreen",
+         pch = 19,
+         xlab = input$xvar,
+         ylab = input$yvar,
+         main = paste("Dispersión:", input$yvar, "vs", input$xvar))
+  }) 
+  
+  output$resumen <- renderPrint({
+    req(dataset())
+    summary(dataset())
+  })
+
+}
+# Ejecutamos la aplicacion shiny
+shinyApp(ui, server)
+```
+
+# Referencias
+
+Venables, W. N., & Ripley, B. D. (2021). Pima.tr (version 7.3). https://rdrr.io/cran/MASS/man/Pima.tr.html
+
+R Core Team. (2021). mtcars (version 4.1.0). https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html
+
+# Anexo
+
+**Imágenes de los resultados de la aplicación shiny**
+
+![Captura 1 de shiny](/Users/joseromerodegaetano/Library/Mobile Documents/com~apple~CloudDocs/JOSE/MASTER-UOC/C1/SOFTWARE_PARA_EL_ANALISIS_DE_DATOS/Romero_deGaetano_Jose_PAD_PAC3/shiny_1.png)
+![Captura 2 de shiny](/Users/joseromerodegaetano/Library/Mobile Documents/com~apple~CloudDocs/JOSE/MASTER-UOC/C1/SOFTWARE_PARA_EL_ANALISIS_DE_DATOS/Romero_deGaetano_Jose_PAD_PAC3/shiny_2.png)
+
+
+
+
+
+
